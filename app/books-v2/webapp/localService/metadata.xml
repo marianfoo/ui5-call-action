@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="BookshopService" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <Annotation Term="Core.Links" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Collection>
+                    <Record>
+                        <PropertyValue Property="rel" String="author"/>
+                        <PropertyValue Property="href" String="https://cap.cloud.sap"/>
+                    </Record>
+                </Collection>
+            </Annotation>
+            <EntityContainer Name="EntityContainer" m:IsDefaultEntityContainer="true">
+                <EntitySet Name="Books" EntityType="BookshopService.Books"/>
+                <FunctionImport Name="Books_orderBook" ReturnType="BookshopService.return_BookshopService_Books_orderBook" m:HttpMethod="POST" sap:action-for="BookshopService.Books">
+                    <Parameter Name="ID" Type="Edm.Guid" Nullable="false" Mode="In"/>
+                    <Parameter Name="quantity" Type="Edm.Int32" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="Books_checkAvailability" ReturnType="Edm.Boolean" m:HttpMethod="GET" sap:action-for="BookshopService.Books">
+                    <Parameter Name="ID" Type="Edm.Guid" Nullable="false" Mode="In"/>
+                </FunctionImport>
+                <EntitySet Name="Chapters" EntityType="BookshopService.Chapters"/>
+                <FunctionImport Name="Chapters_updateContent" ReturnType="BookshopService.return_BookshopService_Chapters_updateContent" m:HttpMethod="POST" sap:action-for="BookshopService.Chapters">
+                    <Parameter Name="ID" Type="Edm.Guid" Nullable="false" Mode="In"/>
+                    <Parameter Name="newContent" Type="Edm.String" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="Chapters_getWordCount" ReturnType="Edm.Int32" m:HttpMethod="GET" sap:action-for="BookshopService.Chapters">
+                    <Parameter Name="ID" Type="Edm.Guid" Nullable="false" Mode="In"/>
+                </FunctionImport>
+                <EntitySet Name="Reviews" EntityType="BookshopService.Reviews"/>
+                <FunctionImport Name="Reviews_markAsHelpful" ReturnType="BookshopService.return_BookshopService_Reviews_markAsHelpful" m:HttpMethod="POST" sap:action-for="BookshopService.Reviews">
+                    <Parameter Name="ID" Type="Edm.Guid" Nullable="false" Mode="In"/>
+                </FunctionImport>
+                <FunctionImport Name="Reviews_isPositive" ReturnType="Edm.Boolean" m:HttpMethod="GET" sap:action-for="BookshopService.Reviews">
+                    <Parameter Name="ID" Type="Edm.Guid" Nullable="false" Mode="In"/>
+                </FunctionImport>
+                <EntitySet Name="Currencies" EntityType="BookshopService.Currencies"/>
+                <EntitySet Name="Currencies_texts" EntityType="BookshopService.Currencies_texts"/>
+                <FunctionImport Name="createPromotion" ReturnType="BookshopService.return_BookshopService_createPromotion" m:HttpMethod="POST">
+                    <Parameter Name="title" Type="Edm.String" Mode="In" Nullable="true"/>
+                    <Parameter Name="discountPercent" Type="Edm.Int32" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="bulkImportBooks" ReturnType="BookshopService.return_BookshopService_bulkImportBooks" m:HttpMethod="POST">
+                    <Parameter Name="fileName" Type="Edm.String" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="archiveBooks" ReturnType="BookshopService.return_BookshopService_archiveBooks" m:HttpMethod="POST">
+                    <Parameter Name="olderThanYears" Type="Edm.Int32" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="generateTableOfContents" ReturnType="BookshopService.return_BookshopService_generateTableOfContents" m:HttpMethod="POST">
+                    <Parameter Name="bookId" Type="Edm.Guid" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="exportChapters" ReturnType="BookshopService.return_BookshopService_exportChapters" m:HttpMethod="POST">
+                    <Parameter Name="bookId" Type="Edm.Guid" Mode="In" Nullable="true"/>
+                    <Parameter Name="format" Type="Edm.String" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="reorganizeChapters" ReturnType="BookshopService.return_BookshopService_reorganizeChapters" m:HttpMethod="POST">
+                    <Parameter Name="bookId" Type="Edm.Guid" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="generateReviewSummary" ReturnType="BookshopService.return_BookshopService_generateReviewSummary" m:HttpMethod="POST">
+                    <Parameter Name="bookId" Type="Edm.Guid" Mode="In" Nullable="true"/>
+                </FunctionImport>
+                <FunctionImport Name="moderateReviews" ReturnType="BookshopService.return_BookshopService_moderateReviews" m:HttpMethod="POST"/>
+                <FunctionImport Name="notifyAuthors" ReturnType="BookshopService.return_BookshopService_notifyAuthors" m:HttpMethod="POST"/>
+                <AssociationSet Name="Books_currency" Association="BookshopService.Books_currency">
+                    <End Role="Books" EntitySet="Books"/>
+                    <End Role="Currencies" EntitySet="Currencies"/>
+                </AssociationSet>
+                <AssociationSet Name="Chapters_book" Association="BookshopService.Chapters_book">
+                    <End Role="Chapters" EntitySet="Chapters"/>
+                    <End Role="Books" EntitySet="Books"/>
+                </AssociationSet>
+                <AssociationSet Name="Reviews_book" Association="BookshopService.Reviews_book">
+                    <End Role="Reviews" EntitySet="Reviews"/>
+                    <End Role="Books" EntitySet="Books"/>
+                </AssociationSet>
+                <AssociationSet Name="Currencies_texts_1" Association="BookshopService.Currencies_texts_1">
+                    <End Role="Currencies" EntitySet="Currencies"/>
+                    <End Role="Currencies_texts" EntitySet="Currencies_texts"/>
+                </AssociationSet>
+                <AssociationSet Name="Currencies_localized" Association="BookshopService.Currencies_localized">
+                    <End Role="Currencies" EntitySet="Currencies"/>
+                    <End Role="Currencies_texts" EntitySet="Currencies_texts"/>
+                </AssociationSet>
+            </EntityContainer>
+            <EntityType Name="Books">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="title" Type="Edm.String" MaxLength="100"/>
+                <Property Name="author" Type="Edm.String" MaxLength="100"/>
+                <Property Name="price" Type="Edm.Decimal" Precision="9" Scale="2"/>
+                <NavigationProperty Name="currency" Relationship="BookshopService.Books_currency" FromRole="Books" ToRole="Currencies"/>
+                <Property Name="currency_code" Type="Edm.String" MaxLength="3"/>
+                <Property Name="stock" Type="Edm.Int32"/>
+                <Property Name="description" Type="Edm.String" MaxLength="1000"/>
+                <NavigationProperty Name="chapters" Relationship="BookshopService.Chapters_book" FromRole="Books" ToRole="Chapters"/>
+                <NavigationProperty Name="reviews" Relationship="BookshopService.Reviews_book" FromRole="Books" ToRole="Reviews"/>
+            </EntityType>
+            <EntityType Name="Chapters">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="title" Type="Edm.String" MaxLength="100"/>
+                <Property Name="content" Type="Edm.String" MaxLength="5000"/>
+                <Property Name="pageNumber" Type="Edm.Int32"/>
+                <NavigationProperty Name="book" Relationship="BookshopService.Chapters_book" FromRole="Chapters" ToRole="Books"/>
+                <Property Name="book_ID" Type="Edm.Guid"/>
+            </EntityType>
+            <EntityType Name="Reviews">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="reviewer" Type="Edm.String" MaxLength="100"/>
+                <Property Name="rating" Type="Edm.Int32"/>
+                <Property Name="comment" Type="Edm.String" MaxLength="1000"/>
+                <NavigationProperty Name="book" Relationship="BookshopService.Reviews_book" FromRole="Reviews" ToRole="Books"/>
+                <Property Name="book_ID" Type="Edm.Guid"/>
+            </EntityType>
+            <EntityType Name="Currencies">
+                <Key>
+                    <PropertyRef Name="code"/>
+                </Key>
+                <Property Name="name" Type="Edm.String" MaxLength="255"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+                <Property Name="symbol" Type="Edm.String" MaxLength="5"/>
+                <Property Name="minorUnit" Type="Edm.Int16"/>
+                <NavigationProperty Name="texts" Relationship="BookshopService.Currencies_texts_1" FromRole="Currencies" ToRole="Currencies_texts"/>
+                <NavigationProperty Name="localized" Relationship="BookshopService.Currencies_localized" FromRole="Currencies" ToRole="Currencies_texts"/>
+            </EntityType>
+            <EntityType Name="Currencies_texts">
+                <Key>
+                    <PropertyRef Name="locale"/>
+                    <PropertyRef Name="code"/>
+                </Key>
+                <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+                <Property Name="name" Type="Edm.String" MaxLength="255"/>
+                <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+                <Property Name="code" Type="Edm.String" MaxLength="3" Nullable="false"/>
+            </EntityType>
+            <ComplexType Name="return_BookshopService_Books_orderBook">
+                <Property Name="message" Type="Edm.String"/>
+                <Property Name="orderId" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="return_BookshopService_Chapters_updateContent">
+                <Property Name="message" Type="Edm.String"/>
+                <Property Name="updated" Type="Edm.Boolean"/>
+            </ComplexType>
+            <ComplexType Name="return_BookshopService_Reviews_markAsHelpful">
+                <Property Name="message" Type="Edm.String"/>
+                <Property Name="helpful" Type="Edm.Boolean"/>
+            </ComplexType>
+            <ComplexType Name="return_BookshopService_createPromotion">
+                <Property Name="message" Type="Edm.String"/>
+                <Property Name="promotionId" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="return_BookshopService_bulkImportBooks">
+                <Property Name="message" Type="Edm.String"/>
+                <Property Name="importedCount" Type="Edm.Int32"/>
+            </ComplexType>
+            <ComplexType Name="return_BookshopService_archiveBooks">
+                <Property Name="message" Type="Edm.String"/>
+                <Property Name="archivedCount" Type="Edm.Int32"/>
+            </ComplexType>
+            <ComplexType Name="return_BookshopService_generateTableOfContents">
+                <Property Name="message" Type="Edm.String"/>
+                <Property Name="toc" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="return_BookshopService_exportChapters">
+                <Property Name="message" Type="Edm.String"/>
+                <Property Name="downloadUrl" Type="Edm.String"/>
+            </ComplexType>
+            <ComplexType Name="return_BookshopService_reorganizeChapters">
+                <Property Name="message" Type="Edm.String"/>
+                <Property Name="reorganized" Type="Edm.Boolean"/>
+            </ComplexType>
+            <ComplexType Name="return_BookshopService_generateReviewSummary">
+                <Property Name="message" Type="Edm.String"/>
+                <Property Name="averageRating" Type="Edm.Decimal" sap:variable-scale="true"/>
+                <Property Name="reviewCount" Type="Edm.Int32"/>
+            </ComplexType>
+            <ComplexType Name="return_BookshopService_moderateReviews">
+                <Property Name="message" Type="Edm.String"/>
+                <Property Name="moderatedCount" Type="Edm.Int32"/>
+            </ComplexType>
+            <ComplexType Name="return_BookshopService_notifyAuthors">
+                <Property Name="message" Type="Edm.String"/>
+                <Property Name="notifiedCount" Type="Edm.Int32"/>
+            </ComplexType>
+            <Association Name="Books_currency">
+                <End Role="Books" Type="BookshopService.Books" Multiplicity="*"/>
+                <End Role="Currencies" Type="BookshopService.Currencies" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Currencies">
+                        <PropertyRef Name="code"/>
+                    </Principal>
+                    <Dependent Role="Books">
+                        <PropertyRef Name="currency_code"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Chapters_book">
+                <End Role="Chapters" Type="BookshopService.Chapters" Multiplicity="*"/>
+                <End Role="Books" Type="BookshopService.Books" Multiplicity="0..1">
+                    <OnDelete Action="Cascade"/>
+                </End>
+                <ReferentialConstraint>
+                    <Principal Role="Books">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="Chapters">
+                        <PropertyRef Name="book_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Reviews_book">
+                <End Role="Reviews" Type="BookshopService.Reviews" Multiplicity="*"/>
+                <End Role="Books" Type="BookshopService.Books" Multiplicity="0..1"/>
+                <ReferentialConstraint>
+                    <Principal Role="Books">
+                        <PropertyRef Name="ID"/>
+                    </Principal>
+                    <Dependent Role="Reviews">
+                        <PropertyRef Name="book_ID"/>
+                    </Dependent>
+                </ReferentialConstraint>
+            </Association>
+            <Association Name="Currencies_texts_1">
+                <End Role="Currencies" Type="BookshopService.Currencies" Multiplicity="1">
+                    <OnDelete Action="Cascade"/>
+                </End>
+                <End Role="Currencies_texts" Type="BookshopService.Currencies_texts" Multiplicity="*"/>
+            </Association>
+            <Association Name="Currencies_localized">
+                <End Role="Currencies" Type="BookshopService.Currencies" Multiplicity="*"/>
+                <End Role="Currencies_texts" Type="BookshopService.Currencies_texts" Multiplicity="0..1"/>
+            </Association>
+            <Annotations Target="BookshopService.Books" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="Book"/>
+                        <PropertyValue Property="TypeNamePlural" String="Books"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="title"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="author"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>title</PropertyPath>
+                        <PropertyPath>author</PropertyPath>
+                        <PropertyPath>price</PropertyPath>
+                        <PropertyPath>stock</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="title"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="author"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="price"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="currency_code"/>
+                            <PropertyValue Property="Label" String="Currency"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="stock"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Order Book"/>
+                            <PropertyValue Property="Action" String="BookshopService.checkAvailability"/>
+                            <PropertyValue Property="Inline" Bool="true"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Check Availability"/>
+                            <PropertyValue Property="Action" String="BookshopService.checkAvailability"/>
+                            <PropertyValue Property="Inline" Bool="true"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Book Details"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#BookDetails"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Chapters"/>
+                            <PropertyValue Property="Target" AnnotationPath="chapters/@UI.LineItem"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Reviews"/>
+                            <PropertyValue Property="Target" AnnotationPath="reviews/@UI.LineItem"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup" Qualifier="BookDetails">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="title"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="author"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="price"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="currency_code"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="stock"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="description"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="BookshopService.Books/createdAt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Created On"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Books/createdBy" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Books/modifiedAt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Changed On"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Books/modifiedBy" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Changed By"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Books/ID" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Books/title" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Title"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Books/author" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Author"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Books/price" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Price"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Books/currency" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Currency"/>
+                <Annotation Term="Core.Description" String="Currency code as specified by ISO 4217"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Books/currency_code" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Currency"/>
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="Label" String="Currency"/>
+                        <PropertyValue Property="CollectionPath" String="Currencies"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="currency_code"/>
+                                    <PropertyValue Property="ValueListProperty" String="code"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="name"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Core.Description" String="Currency code as specified by ISO 4217"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Books/stock" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Stock"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Books/description" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Description"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Chapters" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="Chapter"/>
+                        <PropertyValue Property="TypeNamePlural" String="Chapters"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="title"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="pageNumber"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="title"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="pageNumber"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Update Content"/>
+                            <PropertyValue Property="Action" String="BookshopService.updateContent"/>
+                            <PropertyValue Property="Inline" Bool="true"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Get Word Count"/>
+                            <PropertyValue Property="Action" String="BookshopService.getWordCount"/>
+                            <PropertyValue Property="Inline" Bool="true"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Chapter Details"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#ChapterDetails"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup" Qualifier="ChapterDetails">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="title"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="pageNumber"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="content"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="BookshopService.Chapters/createdAt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Created On"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Chapters/createdBy" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Chapters/modifiedAt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Changed On"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Chapters/modifiedBy" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Changed By"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Chapters/ID" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Chapters/title" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Chapter Title"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Chapters/content" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Content"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Chapters/pageNumber" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Page Number"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Reviews" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="Review"/>
+                        <PropertyValue Property="TypeNamePlural" String="Reviews"/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="reviewer"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="rating"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="reviewer"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="rating"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="comment"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Mark as Helpful"/>
+                            <PropertyValue Property="Action" String="BookshopService.markAsHelpful"/>
+                            <PropertyValue Property="Inline" Bool="true"/>
+                        </Record>
+                        <Record Type="UI.DataFieldForAction">
+                            <PropertyValue Property="Label" String="Is Positive"/>
+                            <PropertyValue Property="Action" String="BookshopService.isPositive"/>
+                            <PropertyValue Property="Inline" Bool="true"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="Review Details"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#ReviewDetails"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup" Qualifier="ReviewDetails">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="reviewer"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="rating"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="comment"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="BookshopService.Reviews/createdAt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Created On"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Reviews/createdBy" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Reviews/modifiedAt" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Changed On"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Reviews/modifiedBy" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Changed By"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Reviews/ID" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Reviews/reviewer" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Reviewer"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Reviews/rating" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Rating"/>
+                <Annotation Term="Validation.Minimum" Int="1"/>
+                <Annotation Term="Validation.Maximum" Int="5"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Reviews/comment" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Comment"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Currencies" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="name"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="BookshopService.Currencies/name" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Name"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Currencies/descr" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Description"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Currencies/code" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Text" Path="name"/>
+                <Annotation Term="Common.Label" String="Currency Code"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Currencies/symbol" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Currency Symbol"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Currencies/minorUnit" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Currency Minor Unit Fractions"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Currencies_texts/locale" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Language Code"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Currencies_texts/name" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Name"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Currencies_texts/descr" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Label" String="Description"/>
+            </Annotations>
+            <Annotations Target="BookshopService.Currencies_texts/code" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.Text" Path="name"/>
+                <Annotation Term="Common.Label" String="Currency Code"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
