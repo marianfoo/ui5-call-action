@@ -1,0 +1,237 @@
+{
+    "_version": "1.65.0",
+    "sap.app": {
+        "id": "com.marianzeis.booksv2",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:lrop",
+            "version": "1.16.3",
+            "toolsId": "161847cf-2ddf-4141-ae2a-1f0ea40e4943"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "/odata/v2/bookshop/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [
+                        "annotation"
+                    ],
+                    "localUri": "localService/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            },
+            "annotation": {
+                "type": "ODataAnnotation",
+                "uri": "annotations/annotation.xml",
+                "settings": {
+                    "localUri": "annotations/annotation.xml"
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.136.0",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.ushell": {},
+                "sap.f": {},
+                "sap.ui.comp": {},
+                "sap.ui.generic.app": {},
+                "sap.suite.ui.generic.template": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "com.marianzeis.booksv2.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "defaultBindingMode": "TwoWay",
+                    "defaultCountMode": "Inline",
+                    "refreshAfterChange": false,
+                    "metadataUrlParams": {
+                        "sap-value-list": "none"
+                    }
+                }
+            },
+            "@i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            }
+        },
+        "resources": {
+            "css": []
+        },
+        "routing": {
+            "config": {},
+            "routes": [],
+            "targets": {}
+        },
+        "extends": {
+            "extensions": {
+                "sap.ui.controllerExtensions": {
+                    "sap.suite.ui.generic.template.ListReport.view.ListReport": {
+                        "controllerName": "com.marianzeis.booksv2.ext.controller.ListReportExt",
+                        "sap.ui.generic.app": {
+                            "Books": {
+                                "EntitySet": "Books",
+                                "Actions": {
+                                    "CustomPromoteBookInvoke": {
+                                        "id": "customPromoteBookButtonInvoke",
+                                        "text": "CUST Promote Book Invoke",
+                                        "press": "customPromoteBookInvoke",
+                                        "requiresSelection": true
+                                    },
+                                    "CustomSetDiscountInvoke": {
+                                        "id": "customSetDiscountButtonInvoke", 
+                                        "text": "CUST Set Discount Invoke",
+                                        "press": "customSetDiscountInvoke",
+                                        "requiresSelection": true
+                                    },
+                                    "CustomRefreshCatalogInvoke": {
+                                        "id": "customRefreshCatalogButtonInvoke",
+                                        "text": "CUST Refresh Catalog Invoke", 
+                                        "press": "customRefreshCatalogInvoke",
+                                        "requiresSelection": false
+                                    },
+                                    "CustomGenerateReportInvoke": {
+                                        "id": "customGenerateReportButtonInvoke",
+                                        "text": "CUST Generate Report Invoke",
+                                        "press": "customGenerateReportInvoke", 
+                                        "requiresSelection": false
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "sap.suite.ui.generic.template.ObjectPage.view.Details": {
+                        "controllerName": "com.marianzeis.booksv2.ext.controller.ObjectPageExt",
+                        "sap.ui.generic.app": {
+                            "Books": {
+                                "EntitySet": "Books",
+                                "Header": {
+                                    "Actions": {
+                                        "HalfPriceCustom": {
+                                            "id": "halfPriceCustomButton",
+                                            "text": "CUST Half Price",
+                                            "press": "halfPrice",
+                                            "requiresSelection": false
+                                        },
+                                        "ShowCoverPictureCustom": {
+                                            "id": "showCoverPictureCustomButton",
+                                            "text": "CUST Show Cover Picture",
+                                            "press": "showCoverPicture",
+                                            "requiresSelection": false
+                                        }
+                                    }
+                                },
+                                "Sections": {
+                                    "chapters": {
+                                        "Actions": {
+                                            "AddChapterCustom": {
+                                                "id": "addChapterCustomButton",
+                                                "text": "CUST Add Chapter",
+                                                "press": "addChapter",
+                                                "requiresSelection": false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "sap.ui.generic.app": {
+        "_version": "1.3.0",
+        "settings": {
+            "forceGlobalRefresh": false,
+            "objectPageHeaderType": "Dynamic",
+            "considerAnalyticalParameters": true,
+            "showDraftToggle": false
+        },
+        "pages": {
+            "ListReport|Books": {
+                "entitySet": "Books",
+                "component": {
+                    "name": "sap.suite.ui.generic.template.ListReport",
+                    "list": true,
+                    "settings": {
+                        "condensedTableLayout": true,
+                        "smartVariantManagement": true,
+                        "enableTableFilterInPageVariant": true,
+                        "loadDataOnAppLaunch": "always",
+                        "filterSettings": {
+                            "dateSettings": {
+                                "useDateRange": true
+                            }
+                        },
+                        "tableSettings": {
+                            "type": "ResponsiveTable"
+                        }
+                    }
+                },
+                "pages": {
+                    "ObjectPage|Books": {
+                        "entitySet": "Books",
+                        "defaultLayoutTypeIfExternalNavigation": "MidColumnFullScreen",
+                        "component": {
+                            "name": "sap.suite.ui.generic.template.ObjectPage"
+                        },
+                        "pages": {
+                            "ObjectPage|chapters": {
+                                "navigationProperty": "chapters",
+                                "entitySet": "Chapters",
+                                "defaultLayoutTypeIfExternalNavigation": "MidColumnFullScreen",
+                                "component": {
+                                    "name": "sap.suite.ui.generic.template.ObjectPage"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    }
+}

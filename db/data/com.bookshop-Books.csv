@@ -1,0 +1,3 @@
+ID,title,author,price,currency_code,stock,description,coverUrl,createdAt,createdBy,modifiedAt,modifiedBy
+3afb35fa-e2c9-40d0-8e22-90e96ead9944,The Great Gatsby,F. Scott Fitzgerald,12.99,USD,50,A classic novel about the American Dream,https://upload.wikimedia.org/wikipedia/commons/7/7a/The_Great_Gatsby_Cover_1925_Retouched.jpg,2025-01-01T00:00:00Z,admin,2025-01-01T00:00:00Z,admin
+7c8f2a1b-d4e5-4c6a-9b7e-1f3a5c8d2e4b,To Kill a Mockingbird,Harper Lee,14.50,USD,35,A gripping tale of racial injustice and childhood innocence,https://upload.wikimedia.org/wikipedia/commons/4/4f/To_Kill_a_Mockingbird_%28first_edition_cover%29.jpg,2025-01-01T00:00:00Z,admin,2025-01-01T00:00:00Z,admin

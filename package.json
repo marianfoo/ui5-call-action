@@ -1,0 +1,42 @@
+{
+  "name": "ui5-call-action",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js-community/odata-v2-adapter": "^1.14.4",
+    "@sap/cds": "^8",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^8",
+    "cap-js-mockdata": "^0.0.3",
+    "cds-plugin-ui5": "^0.13.2"
+  },
+  "scripts": {
+    "start": "cds run",
+    "watch": "cds watch",
+    "deploy": "cds deploy --to sqlite:bookshop.db",
+    "watch-books": "cds watch --open com.marianzeis.books/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-freestyle": "cds watch --open com.freestyle/index.html?sap-ui-xx-viewCache=false --livereload false"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "database": "bookshop.db"
+        }
+      }
+    }
+  },
+  "sapux": [
+    "app/books"
+  ],
+  "workspaces": [
+    "app/*"
+  ]
+}
