@@ -93,6 +93,13 @@ sap.ui.define([
         },
 
         /**
+         * 7. NEW: Complex unbound action - Create Books and Chapters using invokeActions
+         */
+        customCreateBooksAndChaptersInvoke: function() {
+            // not possible with OData V2
+        },
+
+        /**
          * 5. Bound Function call - Get Current Price function using callFunction
          */
         customGetCurrentPrice: function() {
@@ -281,6 +288,13 @@ sap.ui.define([
                     MessageBox.error("Failed to generate report: " + (error.message || "Unknown error"));
                 }
             });
+        },
+
+        /**
+         * 7. NEW: Complex unbound action - Create Books and Chapters using callFunction
+         */
+        customCreateBooksAndChapters: function(event) {
+            // not possible with OData V2
         }
     };
 });

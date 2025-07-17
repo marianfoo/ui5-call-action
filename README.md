@@ -146,7 +146,7 @@ Open in your browser:
 ## TODO
 
 - [X] Check if a function in CAP is different in frontend https://github.com/SAP-samples/btp-cap-demo-usecases/blob/29ca521b076aa6094a996f04e3aca9abf8a1509f/cap-cql-examples/srv/service.cds#L12
-- [ ] action with complex parameters https://github.com/SAP-samples/btp-cap-demo-usecases/blob/29ca521b076aa6094a996f04e3aca9abf8a1509f/cap-fe-lr-op-actions/srv/service.cds#L79-L90
+- [X] action with complex parameters https://github.com/SAP-samples/btp-cap-demo-usecases/blob/29ca521b076aa6094a996f04e3aca9abf8a1509f/cap-fe-lr-op-actions/srv/service.cds#L79-L90
 - [ ] get return value from action (single value and array) https://github.com/SAP-samples/btp-cap-demo-usecases/blob/29ca521b076aa6094a996f04e3aca9abf8a1509f/cap_resilient_timeout/srv/service.cds#L4
 
 ## 🔗 Further Reading

@@ -198,4 +198,87 @@ module.exports = cds.service.impl(async function() {
       reportUrl: reportUrl
     };
   });
+
+  // 6. NEW: Complex unbound action WITH nested parameters
+  this.on('createBooksAndChapters', async (req) => {
+    const { booksData } = req.data;
+    
+    if (!booksData || !Array.isArray(booksData) || booksData.length === 0) {
+      req.error('Books data is required and must be a non-empty array');
+      return { message: 'Invalid books data', createdBooks: [] };
+    }
+    
+    const createdBooks = [];
+    
+    try {
+      // Process each book and its chapters
+      for (const bookData of booksData) {
+        // Validate required book fields
+        if (!bookData.title || !bookData.author) {
+          req.error('Book title and author are required');
+          continue;
+        }
+        
+        // Create the book
+        const newBook = await cds.create(Books).entries({
+          title: bookData.title,
+          author: bookData.author,
+          price: bookData.price || 0,
+          currency: { code: bookData.currency || 'EUR' },
+          stock: bookData.stock || 0,
+          description: bookData.description || '',
+          coverUrl: bookData.coverUrl || ''
+        });
+        
+        const createdChapters = [];
+        
+        // Create chapters if provided
+        if (bookData.chapters && Array.isArray(bookData.chapters)) {
+          for (const chapterData of bookData.chapters) {
+            if (chapterData.title) {
+              const newChapter = await cds.create(Chapters).entries({
+                title: chapterData.title,
+                content: chapterData.content || '',
+                pageNumber: chapterData.pageNumber || 1,
+                book_ID: newBook.ID
+              });
+              
+              createdChapters.push({
+                ID: newChapter.ID,
+                title: chapterData.title,
+                content: chapterData.content || '',
+                pageNumber: chapterData.pageNumber || 1
+              });
+            }
+          }
+        }
+        
+        // Add the created book with its chapters to the result
+        createdBooks.push({
+          ID: newBook.ID,
+          title: bookData.title,
+          author: bookData.author,
+          price: bookData.price || 0,
+          currency: bookData.currency || 'EUR',
+          stock: bookData.stock || 0,
+          description: bookData.description || '',
+          coverUrl: bookData.coverUrl || '',
+          chapters: createdChapters
+        });
+      }
+      
+      req.info(`Successfully created ${createdBooks.length} books with their chapters`);
+      return {
+        message: `Successfully created ${createdBooks.length} books with their chapters`,
+        createdBooks: createdBooks
+      };
+      
+    } catch (error) {
+      req.error(`Failed to create books and chapters: ${error.message}`);
+      return {
+        message: `Failed to create books and chapters: ${error.message}`,
+        createdBooks: []
+      };
+    }
+  });
 }); 

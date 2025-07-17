@@ -52,6 +52,40 @@ service BookshopService @(path: '/bookshop') {
     reportUrl: String;
   };
 
+  // 6. NEW: Complex unbound action WITH nested parameters
+  action createBooksAndChapters(booksData: array of {
+    title: String;
+    author: String;
+    price: Decimal;
+    currency: String;
+    stock: Integer;
+    description: String;
+    coverUrl: String;
+    chapters: array of {
+      title: String;
+      content: String;
+      pageNumber: Integer;
+    };
+  }) returns {
+    message: String;
+    createdBooks: array of {
+      ID: UUID;
+      title: String;
+      author: String;
+      price: Decimal;
+      currency: String;
+      stock: Integer;
+      description: String;
+      coverUrl: String;
+      chapters: array of {
+        ID: UUID;
+        title: String;
+        content: String;
+        pageNumber: Integer;
+      };
+    };
+  };
+
   // 5. Unbound function WITHOUT parameters
   function getSumBookPrices() returns {
     totalPrice: Decimal;

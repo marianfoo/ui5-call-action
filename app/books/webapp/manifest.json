@@ -163,6 +163,13 @@
                       "enabled": true,
                       "requiresSelection": false,
                       "text": "CUST Func Get Sum Book Prices"
+                    },
+                    "CustomCreateBooksAndChapters": {
+                      "press": "com.marianzeis.books.ext.controller.ActionInvoke.customCreateBooksAndChapters",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": false,
+                      "text": "CUST Create Books and Chapters"
                     }
                   }
                 }
