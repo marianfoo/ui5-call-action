@@ -158,6 +158,18 @@
                                         "text": "CUST Generate Report Invoke",
                                         "press": "customGenerateReportInvoke", 
                                         "requiresSelection": false
+                                    },
+                                    "CustomGetCurrentPrice": {
+                                        "id": "customGetCurrentPriceButton",
+                                        "text": "CUST Func Get Current Price",
+                                        "press": "customGetCurrentPrice",
+                                        "requiresSelection": true
+                                    },
+                                    "CustomGetSumBookPrices": {
+                                        "id": "customGetSumBookPricesButton",
+                                        "text": "CUST Func Get Sum Book Prices",
+                                        "press": "customGetSumBookPrices",
+                                        "requiresSelection": false
                                     }
                                 }
                             }

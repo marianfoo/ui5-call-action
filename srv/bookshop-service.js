@@ -131,6 +131,38 @@ module.exports = cds.service.impl(async function() {
     return { value: book.coverUrl };
   });
 
+  // DEMO FUNCTION - getCurrentPrice function implementation
+  this.on('getCurrentPrice', async (req) => {
+    const bookId = req.params[0].ID;
+    
+    const books = await cds.read(Books).where({ ID: bookId });
+    const book = books[0];
+    
+    if (!book) {
+      req.error(`Book with ID ${bookId} not found`);
+      return { price: null };
+    }
+    
+    req.info(`Current price for "${book.title}": ${book.price}`);
+    return {
+      price: book.price
+    };
+  });
+
+  // DEMO FUNCTION - getSumBookPrices function implementation
+  this.on('getSumBookPrices', async (req) => {
+    const books = await cds.read(Books, ['price']);
+    
+    const totalPrice = books.reduce((sum, book) => {
+      return sum + (book.price || 0);
+    }, 0);
+    
+    req.info(`Total price of all books: ${totalPrice}`);
+    return {
+      totalPrice: totalPrice
+    };
+  });
+
   // 3. Unbound action WITHOUT parameters
   this.on('refreshCatalog', async (req) => {
     const refreshedAt = new Date();

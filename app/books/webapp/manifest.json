@@ -149,6 +149,20 @@
                       "enabled": true,
                       "requiresSelection": false,
                       "text": "CUST Generate Report"
+                    },
+                    "CustomGetCurrentPrice": {
+                      "press": "com.marianzeis.books.ext.controller.Action.customGetCurrentPrice",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "CUST Func Get Current Price"
+                    },
+                    "CustomGetSumBookPrices": {
+                      "press": "com.marianzeis.books.ext.controller.Action.customGetSumBookPrices",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": false,
+                      "text": "CUST Func Get Sum Book Prices"
                     }
                   }
                 }

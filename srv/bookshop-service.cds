@@ -34,6 +34,10 @@ service BookshopService @(path: '/bookshop') {
     action showCoverPicture() returns {
       value: String;
     };
+
+    function getCurrentPrice() returns {
+      price: Decimal;
+    };
   };
 
   // 3. Unbound action WITHOUT parameters
@@ -47,7 +51,12 @@ service BookshopService @(path: '/bookshop') {
     message: String;
     reportUrl: String;
   };
-  
+
+  // 5. Unbound function WITHOUT parameters
+  function getSumBookPrices() returns {
+    totalPrice: Decimal;
+  };
+
   entity Chapters as projection on my.Chapters;
   entity Reviews as projection on my.Reviews;
 } 

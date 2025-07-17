@@ -92,6 +92,72 @@ sap.ui.define([
                 });
         },
 
+        /**
+         * 5. Bound Function call - Get Current Price function using callFunction
+         */
+        customGetCurrentPrice: function() {
+            const contexts = this.extensionAPI.getSelectedContexts();
+            
+            if (!contexts || contexts.length === 0) {
+                MessageToast.show("Please select a book");
+                return;
+            }
+
+            const context = contexts[0];
+            const bookId = context.getProperty("ID");
+            const isActiveEntity = context.getProperty("IsActiveEntity");
+
+            if (!bookId) {
+                MessageToast.show("No book ID found");
+                return;
+            }
+
+            const model = this.getView().getModel();
+            const path = "/Books_getCurrentPrice";
+
+            model.callFunction(path, {
+                method: "GET",
+                urlParameters: {
+                    "ID": bookId,
+                    "IsActiveEntity": isActiveEntity
+                },
+                success: function(data) {
+                    if (data && data.Books_getCurrentPrice && data.Books_getCurrentPrice.price !== null) {
+                        const price = parseFloat(data.Books_getCurrentPrice.price).toFixed(2);
+                        MessageToast.show("Current price: " + price + " (CUST V2)");
+                    } else {
+                        MessageToast.show("No price data received");
+                    }
+                },
+                error: function(error) {
+                    MessageBox.error("Failed to get current price: " + (error.message || "Unknown error"));
+                }
+            });
+        },
+
+        /**
+         * 6. Unbound Function call - Get Sum Book Prices function using callFunction
+         */
+        customGetSumBookPrices: function() {
+            const model = this.getView().getModel();
+            const path = "/getSumBookPrices";
+
+            model.callFunction(path, {
+                method: "GET",
+                success: function(data) {
+                    if (data && data.getSumBookPrices && data.getSumBookPrices.totalPrice !== null) {
+                        const totalPrice = parseFloat(data.getSumBookPrices.totalPrice).toFixed(2);
+                        MessageToast.show("Total price of all books: " + totalPrice + " (CUST V2)");
+                    } else {
+                        MessageToast.show("No total price data received");
+                    }
+                },
+                error: function(error) {
+                    MessageBox.error("Failed to get sum book prices: " + (error.message || "Unknown error"));
+                }
+            });
+        },
+
         // DEMO ACTIONS - 4 types of actions for demonstration using OData V2
 
         /**

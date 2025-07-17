@@ -94,3 +94,58 @@ export async function customGenerateReport(this : ExtensionAPI): Promise<void> {
   // const actionResult = actionBinding.getBoundContext()?.getObject();
   MessageToast.show("Report generated");
 }
+
+/* ------------------------------------------------------------------ */
+/* 5.  FUNCTION call – Get Current Price                               */
+/* ------------------------------------------------------------------ */
+export async function customGetCurrentPrice(this : ExtensionAPI): Promise<void> {
+
+  const selectedContexts = this.getSelectedContexts();
+  if (!selectedContexts || selectedContexts.length === 0) {
+    MessageToast.show("Please select a book");
+    return;
+  }
+
+  const bookContext = selectedContexts[0];
+  const odataModel = this.getModel() as ODataModel;
+  const functionPath = "BookshopService.getCurrentPrice(...)";
+  
+  const functionBinding = odataModel.bindContext(functionPath, bookContext);
+
+  await functionBinding.execute();
+
+  const result = functionBinding.getBoundContext()?.getObject() as {
+    price: number;
+  };
+
+  if (result && result.price !== null) {
+    const price = Number(result.price).toFixed(2);
+    MessageToast.show(`Current price: ${price} (CUST Execute)`);
+  } else {
+    MessageToast.show("No price data received");
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* 6.  FUNCTION call – Get Sum Book Prices                             */
+/* ------------------------------------------------------------------ */
+export async function customGetSumBookPrices(this : ExtensionAPI): Promise<void> {
+
+  const odataModel = this.getModel() as ODataModel;
+  const functionPath = "/BookshopService.getSumBookPrices(...)";
+  
+  const functionBinding = odataModel.bindContext(functionPath);
+
+  await functionBinding.execute();
+
+  const result = functionBinding.getBoundContext()?.getObject() as {
+    totalPrice: number;
+  };
+
+  if (result && result.totalPrice !== null) {
+    const totalPrice = Number(result.totalPrice).toFixed(2);
+    MessageToast.show(`Total price of all books: ${totalPrice} (CUST Execute)`);
+  } else {
+    MessageToast.show("No total price data received");
+  }
+}
