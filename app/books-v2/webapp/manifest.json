@@ -111,30 +111,6 @@
                             "Books": {
                                 "EntitySet": "Books",
                                 "Actions": {
-                                    "CustomPromoteBook": {
-                                        "id": "customPromoteBookButton",
-                                        "text": "CUST Promote Book",
-                                        "press": "customPromoteBook",
-                                        "requiresSelection": true
-                                    },
-                                    "CustomSetDiscount": {
-                                        "id": "customSetDiscountButton", 
-                                        "text": "CUST Set Discount",
-                                        "press": "customSetDiscount",
-                                        "requiresSelection": true
-                                    },
-                                    "CustomRefreshCatalog": {
-                                        "id": "customRefreshCatalogButton",
-                                        "text": "CUST Refresh Catalog", 
-                                        "press": "customRefreshCatalog",
-                                        "requiresSelection": false
-                                    },
-                                    "CustomGenerateReport": {
-                                        "id": "customGenerateReportButton",
-                                        "text": "CUST Generate Report",
-                                        "press": "customGenerateReport", 
-                                        "requiresSelection": false
-                                    },
                                     "CustomPromoteBookInvoke": {
                                         "id": "customPromoteBookButtonInvoke",
                                         "text": "CUST Promote Book Invoke",
@@ -157,18 +133,6 @@
                                         "id": "customGenerateReportButtonInvoke",
                                         "text": "CUST Generate Report Invoke",
                                         "press": "customGenerateReportInvoke", 
-                                        "requiresSelection": false
-                                    },
-                                    "CustomGetCurrentPrice": {
-                                        "id": "customGetCurrentPriceButton",
-                                        "text": "CUST Func Get Current Price",
-                                        "press": "customGetCurrentPrice",
-                                        "requiresSelection": true
-                                    },
-                                    "CustomGetSumBookPrices": {
-                                        "id": "customGetSumBookPricesButton",
-                                        "text": "CUST Func Get Sum Book Prices",
-                                        "press": "customGetSumBookPrices",
                                         "requiresSelection": false
                                     }
                                 }

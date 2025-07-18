@@ -1,168 +1,130 @@
 # SAP CAP Action Extensions Demo
 
-> **One repo – every official way to trigger OData V2 & V4 actions in SAP Fiori Elements**, side by side:  
-> CAP annotations (⚙️ **CAP**) versus controller-level overrides (✨ **CUST**).
 
-![Demo showing CAP and CUST action buttons in List Report and Object Page](docs/assets/demo-screenshot.png)
 
----
-
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 git clone https://github.com/your-org/ui5-call-action.git
 cd ui5-call-action
-npm install                # installs CAP, UI5 tooling, etc.
-cds watch                  # starts CAP + both FE apps
-```
+npm install           # installs CAP, UI5 tooling, ESLint, etc.
+npm run watch             # starts CAP + all UI5 apps on http://localhost:4004
+````
 
 Open in your browser:
-* **UI5 V4 app** → [http://localhost:4004/books/webapp/](http://localhost:4004/books/webapp/)
-* **UI5 V2 app** → [http://localhost:4004/books-v2/webapp/](http://localhost:4004/books-v2/webapp/)
+
+| App                       | URL                                                                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **UI5 V4 Fiori Elements** | [http://localhost:4004/com.marianzeis.books/index.html](http://localhost:4004/com.marianzeis.books/index.html)     |
+| **UI5 V2 Fiori Elements** | [http://localhost:4004/com.marianzeis.booksv2/index.html](http://localhost:4004/com.marianzeis.booksv2/index.html) |
+| **UI5 V4 Freestyle**      | [http://localhost:4004/com.freestyle/index.html](http://localhost:4004/com.freestyle/index.html)                   |
+| **UI5 V2 Freestyle**      | [http://localhost:4004/com.freestyle-v2/index.html](http://localhost:4004/com.freestyle-v2/index.html)             |
+
 
 ### Prerequisites
 
-| Tool    | Minimum version | Install command        |
-| ------- | --------------- | ---------------------- |
-| Node.js | 18 LTS          | —                      |
-| cds-dk  | 7               | `npm i -g @sap/cds-dk` |
-| git     | any             | —                      |
+| Tool    | Min Version | Install                |
+| ------- | ----------- | ---------------------- |
+| Node.js | 18 LTS      | —                      |
+| cds-dk  | 7.x         | `npm i -g @sap/cds-dk` |
+| git     | any         | —                      |
 
 ---
 
-## 📦 What's Inside
+##  What’s Inside
 
-| Layer                 | Folder         | Highlights                                                                                          |
-| --------------------- | -------------- | --------------------------------------------------------------------------------------------------- |
-| **CAP Service**       | `srv/`         | `.cds` action definitions & JavaScript handlers                                                     |
-| **Fiori Elements V4** | `app/books/`    | TypeScript controllers using `EditFlow.invokeAction`, `bindContext().invoke()` & legacy `execute()` |
-| **Fiori Elements V2** | `app/books-v2/` | JavaScript controllers using `extensionAPI.invokeActions` and `ODataModel.callFunction`             |
+| Layer                 | Folder              | Highlights                                                   |
+| --------------------- | ------------------- | ------------------------------------------------------------ |
+| **CAP Service**       | `srv/`              | `.cds` definitions + JavaScript handlers                     |
+| **Fiori Elements V4** | `app/books/`        | CAP-annotated *CAP* buttons + custom extensions (*CUST*)     |
+| **Fiori Elements V2** | `app/books-v2/`     | Same patterns, but UI5 V2                                    |
+| **Freestyle V4**      | `app/freestyle/`    | `bindContext().invoke()` (✅) & `execute()` (legacy)          |
+| **Freestyle V2**      | `app/freestyle-v2/` | `ODataModel.callFunction()` & `extensionAPI.invokeActions()` |
 
----
-
-## 🎯 Action Types Demonstrated
-
-### Bound Actions (require entity context)
-- **WITH Parameters**: `setDiscount(percentage, reason)` - Apply discount to books
-- **WITHOUT Parameters**: `promoteBook()` - Promote book status
-- **WITHOUT Parameters**: `halfPrice()` - Reduce book price to half
-
-### Unbound Actions (service-level)
-- **WITH Parameters**: `generateReport(reportType, dateFrom, dateTo)` - Generate reports
-- **WITHOUT Parameters**: `refreshCatalog()` - Refresh catalog from external sources
+A full walk-through is available as a blog post → **“Complete Guide to Calling Actions in UI5 with Custom Code”** (link coming soon).
 
 ---
 
-## 📑 Action Implementation Matrix
+## Action & Function Types
 
-| Action           | Context | Parameters             | CAP Button | CUST Implementation                                                |
-| ---------------- | ------- | ---------------------- | ---------- | ------------------------------------------------------------------ |
-| `promoteBook`    | bound   | –                      | ✅          | `ActionInvoke.customPromoteBook` V4 / `customPromoteBookInvoke` V2 |
-| `setDiscount`    | bound   | percentage, reason     | ✅          | `ActionInvoke.customSetDiscount` V4 / `customSetDiscountInvoke` V2                                                              |
-| `refreshCatalog` | unbound | –                      | ✅          | `ActionInvoke.customRefreshCatalog` V4 / `customRefreshCatalogInvoke` V2                                             |
-| `generateReport` | unbound | type, dateFrom, dateTo | ✅          | `ActionInvoke.customGenerateReport` V4 / `customGenerateReportInvoke` V2                                                                  |
+| Type         | Scope   | Params? | Example              | Purpose                  |
+| ------------ | ------- | ------- | -------------------- | ------------------------ |
+| **Action**   | Bound   | ✔ / ✖   | `promoteBook()`      | Write side-effects       |
+|              | Unbound | ✔ / ✖   | `refreshCatalog()`   | Service-wide mutations   |
+| **Function** | Bound   | ✖       | `getCurrentPrice()`  | Read-only, entity level  |
+|              | Unbound | ✖       | `getSumBookPrices()` | Read-only, service level |
 
----
-
-## 🎯 API Decision Matrix
-
-### **UI5 v4 (TypeScript)** - Choose Your Approach
-
-| API Approach | File | Action Types | When to Use | Pros | Cons |
-|--------------|------|--------------|-------------|------|------|
-| **`EditFlow.invokeAction()`** | [`ObjectAction.ts`](app/books/webapp/ext/controller/ObjectAction.ts) | All types | **Recommended** | Auto busy indicators, side-effects, error handling | Limited customization |
-| **`bindContext().invoke()`** | [`ActionInvoke.ts`](app/books/webapp/ext/controller/ActionInvoke.ts) | All types | **UI5 1.123+** | Modern Promise-based API | Requires newer UI5 version |
-| **`bindContext().execute()`** | [`ActionExecute.ts`](app/books/webapp/ext/controller/ActionExecute.ts) | All types | Legacy/Custom control | Direct OData access, full control | Deprecated since UI5 1.123+ |
-
-### **UI5 v2 (JavaScript)** - Choose Your Approach
-
-| API Approach | File | Action Types | When to Use | Pros | Cons |
-|--------------|------|--------------|-------------|------|------|
-| **`extensionAPI.invokeActions()`** | [`ListReportExt.controller.js`](app/books-v2/webapp/ext/controller/ListReportExt.controller.js) | **Bound only** | Bound actions | Auto busy, side-effects, multi-select | Only works for bound actions |
-| **`ODataModel.callFunction()`** | [`ObjectPageExt.controller.js`](app/books-v2/webapp/ext/controller/ObjectPageExt.controller.js) | All types | **Unbound actions, full control** | Works for all action types | Manual busy handling required |
-
-### **Quick Decision Guide**
-1. **Start with**: Framework helpers (`EditFlow.invokeAction` in V4, `extensionAPI.invokeActions` in V2)
-2. **For unbound actions in V2**: Must use `callFunction` 
-3. **For maximum control**: Use direct model binding approaches
-4. **For compatibility**: Stick to "Recommended" approaches above
+See [`srv/bookshop-service.cds`](srv/bookshop-service.cds) for the full catalog.
 
 ---
 
-## 🎮 Testing Actions
+## Implementation Matrix
 
-### Action Button Locations:
-- **List Report**: Toolbar buttons (demo actions)
-- **Object Page Header**: `halfPrice`, `showCoverPicture` 
-- **Object Page Sections**: `addChapter` (in chapters table)
-
-### Button Prefixes:
-- **"CAP"** = Backend CAP action (auto-generated)
-- **"CUST"** = Custom frontend implementation
-
----
-
-<details>
-<summary>📁 Complete File Structure (click to expand)</summary>
-
-### Backend (CAP)
-- [`srv/bookshop-service.cds`](srv/bookshop-service.cds) - Action definitions
-- [`srv/bookshop-service.js`](srv/bookshop-service.js) - Action handlers
-- [`srv/fiori-annotations.cds`](srv/fiori-annotations.cds) - UI annotations
-
-### Frontend V4 (TypeScript)
-- [`app/books/webapp/ext/controller/ObjectAction.ts`](app/books/webapp/ext/controller/ObjectAction.ts) - Main implementation (EditFlow.invokeAction)
-- [`app/books/webapp/ext/controller/ActionInvoke.ts`](app/books/webapp/ext/controller/ActionInvoke.ts) - Alternative (bindContext + invoke)
-- [`app/books/webapp/ext/controller/ActionExecute.ts`](app/books/webapp/ext/controller/ActionExecute.ts) - Alternative (bindContext + execute) 
-
-### Frontend V2 (JavaScript)  
-- [`app/books-v2/webapp/ext/controller/ObjectPageExt.controller.js`](app/books-v2/webapp/ext/controller/ObjectPageExt.controller.js) - Main implementation (callFunction)
-- [`app/books-v2/webapp/ext/controller/ListReportExt.controller.js`](app/books-v2/webapp/ext/controller/ListReportExt.controller.js) - Alternative (invokeActions + callFunction)
-
-</details>
+| Operation                       | Context | Params   | **CAP** Button | **CUST** Implementation                                   |
+| ------------------------------- | ------- | -------- | -------------- | --------------------------------------------------------- |
+| `promoteBook`                   | bound   | –        | ✅              | `customPromoteBook` (V4) / `customPromoteBookInvoke` (V2) |
+| `setDiscount`                   | bound   | ✔        | ✅              | `customSetDiscount` (V4/V2)                               |
+| `halfPrice`                     | bound   | –        | ✅              | Object-Page action                                        |
+| `addChapter`                    | bound   | ✔        | ✅              | Object-Page action                                        |
+| `refreshCatalog`                | unbound | –        | ✅              | `customRefreshCatalog` (V4/V2)                            |
+| `generateReport`                | unbound | ✔        | ✅              | `customGenerateReport` (V4/V2)                            |
+| `createBooksAndChapters`        | unbound | ✔ (deep) | ✅              | `customCreateBooksAndChapters` (V4)                       |
+| `getCurrentPrice` *(function)*  | bound   | –        | ✅              | `customGetCurrentPrice` (V4) / function call (V2)         |
+| `getSumBookPrices` *(function)* | unbound | –        | ✅              | `customGetSumBookPrices` (V4) / function call (V2)        |
 
 ---
 
-## 🏆 Best Practices
+## API Cheat Sheet (+ Docs)
 
-1. **For Business Logic**: Use CAP backend actions with annotations
-2. **For UI Logic**: Use custom frontend implementations  
-3. **Start Simple**: Begin with framework helpers before moving to direct model access
-4. **Error Handling**: Framework helpers provide better UX out-of-the-box
-5. **Consistency**: Use same approach across your application
+| UI5 Version        | Helper                         | Doc                                                                                                                         | Notes                                       |
+| ------------------ | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| **V4 (FE)**        | `getEditFlow().invokeAction()` | [API](https://ui5.sap.com/#/api/sap.fe.core.controllerextensions.EditFlow%23methods/invokeAction)                           | Bound & unbound, handles draft/side-effects |
+| **V4 (Freestyle)** | `bindContext().invoke()`       | [API](https://ui5.sap.com/#/api/sap.ui.model.odata.v4.ODataContextBinding%23methods/invoke)                                 | Requires UI5 ≥ 1.123                        |
+|                    | `bindContext().execute()`      | [API](https://ui5.sap.com/#/api/sap.ui.model.odata.v4.ODataContextBinding%23methods/execute)                                | Deprecated in 1.123, still works            |
+| **V2 (FE)**        | `extensionAPI.invokeActions()` | [API](https://ui5.sap.com/#/api/sap.suite.ui.generic.template.ListReport.extensionAPI.ExtensionAPI%23methods/invokeActions) | Bound actions only, multi-select            |
+| **V2 (any)**       | `ODataModel.callFunction()`    | [API](https://ui5.sap.com/#/api/sap.ui.model.odata.v2.ODataModel%23methods/callFunction)                                    | Low-level, works everywhere                 |
 
----
+Need OData V2 in CAP? Install the community adapter:
 
-## 📖 Learning Outcomes
-
-- Understand all 4 action types in CAP
-- Compare CAP vs custom frontend approaches
-- Master different UI5 action calling techniques
-- Learn when to use each approach
-- Best practices for production applications
-
----
-
-## TODO
-
-- [X] Check if a function in CAP is different in frontend https://github.com/SAP-samples/btp-cap-demo-usecases/blob/29ca521b076aa6094a996f04e3aca9abf8a1509f/cap-cql-examples/srv/service.cds#L12
-- [X] action with complex parameters https://github.com/SAP-samples/btp-cap-demo-usecases/blob/29ca521b076aa6094a996f04e3aca9abf8a1509f/cap-fe-lr-op-actions/srv/service.cds#L79-L90
-- [ ] get return value from action (single value and array) https://github.com/SAP-samples/btp-cap-demo-usecases/blob/29ca521b076aa6094a996f04e3aca9abf8a1509f/cap_resilient_timeout/srv/service.cds#L4
-
-## 🔗 Further Reading
-
-- **CAP Actions & Functions** ¹
-- **Fiori Elements Actions** documentation ²
-- **UI5 ExtensionAPI.invokeActions** reference ³
-- **UI5 ODataModel.callFunction (V2)** reference ⁴
-- **UI5 bindContext().invoke (V4)** reference ⁵
+```bash
+npm i -D @cap-js-community/odata-v2-adapter
+# → service on http://localhost:4004/odata/v2/<serviceName>
+```
 
 ---
 
-<sub>
-¹ <https://cap.cloud.sap/docs/guides/providing-services#actions-functions>  
-² <https://ui5.sap.com/#/topic/cbf16c599f2d4b8796e3702f7d4aae6c>  
-³ <https://ui5.sap.com/#/api/sap.ui.generic.app.navigation.service.ExtensionAPI/methods/invokeActions>  
-⁴ <https://ui5.sap.com/#/api/sap.ui.model.odata.v2.ODataModel/methods/callFunction>  
-⁵ <https://ui5.sap.com/#/api/sap.ui.model.odata.v4.ODataContextBinding/methods/invoke>
-</sub>
+## Best Practices
+
+1. **Prefer CAP annotations** for business logic & standard UI; fallback to CUST code for dialogs, defaults, or cross-entity tasks.
+2. **V4 first** – new features land here first; V2 is legacy.
+3. **Batch & Side-effects** – use `groupId` + `requestSideEffects()` in freestyle apps.
+4. **Error handling** – let EditFlow/helpers surface messages; add `MessageBox` only for edge cases.
+5. **Deprecations** – migrate from `execute()` → `invoke()` when upgrading to UI5 1.123+.
+
+---
+
+## Try it Out
+
+* Look for **CAP \*** buttons (auto-generated) vs. **CUST \*** buttons (custom).
+* Use your browser’s **Network tab** to compare the OData payloads.
+* Switch between **V2** and **V4** apps to see the path differences (`BookshopService.promoteBook(...)` vs `/Books_promoteBook`).
+
+---
+
+## Further Reading
+
+* **UI5 Official Docs** – [Actions & Functions (V4)](https://ui5.sap.com/#/topic/0ec2820b6c0d46d6b82858dfe720c317) | [OData V2 Model](https://ui5.sap.com/#/api/sap.ui.model.odata.v2.ODataModel)
+* **CAP Docs** – [Modeling Actions & Functions](https://cap.cloud.sap/docs/guides/actions)
+* **Blog Post** – Complete walkthrough with screenshots & code explanations (link forthcoming).
+
+---
+
+## Learning Outcomes
+
+* Identify all 4 CAP action types & 2 function scopes
+* Trigger them from **every** UI flavor: FE V4, FE V2, freestyle V4, freestyle V2
+* Understand helper APIs vs. low-level model calls
+* See how deprecated `execute()` compares to modern `invoke()`
+* Apply best practices for drafts, batching & error handling
+
+Enjoy the repo, file an issue if you spot a missing pattern, and happy coding! 🎉

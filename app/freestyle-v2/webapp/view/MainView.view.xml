@@ -1,0 +1,74 @@
+<mvc:View controllerName="com.freestyle-v2.controller.MainView"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page id="page" title="OData V2 Freestyle Actions Demo">
+        <content>
+            <VBox id="mainVBox" class="sapUiMediumMargin">
+                
+                <!-- Book Details Section -->
+                <Panel id="bookPanel" headerText="Book Details" expandable="true" expanded="true">
+                    <content>
+                        <VBox id="bookVBox" class="sapUiSmallMargin">
+                            <Title id="bookTitle" text="{title}" level="H2"/>
+                            <Text id="bookAuthor" text="Author: {author}"/>
+                            <Text id="bookPrice" text="Price: {price} {currency_code}"/>
+                            <Text id="bookStock" text="Stock: {stock}"/>
+                            <Text id="bookDescription" text="{descr}"/>
+                        </VBox>
+                    </content>
+                </Panel>
+                
+                <!-- callFunction Section -->
+                <Panel id="callFunctionPanel" headerText="Actions using callFunction() [ONLY OPTION in Freestyle Apps]" expandable="true" expanded="true" class="sapUiMediumMarginTop">
+                    <content>
+                        <VBox id="callFunctionVBox" class="sapUiSmallMargin">
+                            
+                            <!-- Bound Actions with callFunction -->
+                            <Title id="callBoundTitle" text="Bound Actions (using this book's context)" level="H3" class="sapUiSmallMarginTop"/>
+                            <HBox id="callBoundHBox" class="sapUiTinyMargin">
+                                <Button id="callPromoteBtn" text="callFunction: Promote Book" press="callPromoteBook" type="Emphasized" class="sapUiTinyMarginEnd"/>
+                                <Button id="callDiscountBtn" text="callFunction: Set Discount (25%)" press="callSetDiscount" type="Emphasized"/>
+                            </HBox>
+                            
+                            <!-- Unbound Actions with callFunction -->
+                            <Title id="callUnboundTitle" text="Unbound Actions" level="H3" class="sapUiSmallMarginTop"/>
+                            <HBox id="callUnboundHBox" class="sapUiTinyMargin">
+                                <Button id="callRefreshBtn" text="callFunction: Refresh Catalog" press="callRefreshCatalog" type="Default" class="sapUiTinyMarginEnd"/>
+                                <Button id="callReportBtn" text="callFunction: Generate Report" press="callGenerateReport" type="Default"/>
+                            </HBox>
+                            
+                            <!-- Bound Functions with callFunction -->
+                            <Title id="callFuncTitle" text="Bound Functions (using this book's context)" level="H3" class="sapUiSmallMarginTop"/>
+                            <HBox id="callFuncHBox" class="sapUiTinyMargin">
+                                <Button id="callPriceBtn" text="callFunction: Get Current Price" press="callGetCurrentPrice" type="Ghost" class="sapUiTinyMarginEnd"/>
+                            </HBox>
+                            
+                            <!-- Unbound Functions with callFunction -->
+                            <Title id="callUnboundFuncTitle" text="Unbound Functions" level="H3" class="sapUiSmallMarginTop"/>
+                            <HBox id="callUnboundFuncHBox" class="sapUiTinyMargin">
+                                <Button id="callSumBtn" text="callFunction: Get Sum Book Prices" press="callGetSumBookPrices" type="Ghost"/>
+                            </HBox>
+                            
+                        </VBox>
+                    </content>
+                </Panel>
+                
+                <!-- Information Panel -->
+                <Panel id="infoPanel" headerText="Information" expandable="true" expanded="false" class="sapUiMediumMarginTop">
+                    <content>
+                        <VBox id="infoVBox" class="sapUiSmallMargin">
+                            <Text id="infoText1" text="This demo shows how to call OData V2 actions and functions in a freestyle UI5 application."/>
+                            <Text id="infoText2" text="• callFunction(): The ONLY way to call actions in freestyle apps" class="sapUiTinyMarginTop"/>
+                            <Text id="infoText3" text="• invokeActions(): Only available in Fiori Elements apps with ExtensionAPI"/>
+                            <Text id="infoText4" text="• Bound actions use the page's book context automatically"/>
+                            <Text id="infoText5" text="• Unbound actions are service-level operations"/>
+                            <Text id="infoText6" text="• Functions return data that can be processed"/>
+                            <Text id="infoText7" text="• V2 action paths differ from V4 (e.g., Books_promoteBook vs BookshopService.promoteBook)"/>
+                        </VBox>
+                    </content>
+                </Panel>
+                
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

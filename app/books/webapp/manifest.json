@@ -122,20 +122,6 @@
                     "type": "ResponsiveTable"
                   },
                   "actions": {
-                    "CustomPromoteBook": {
-                      "press": "com.marianzeis.books.ext.controller.ActionInvoke.customPromoteBook",
-                      "visible": true,
-                      "enabled": true,
-                      "requiresSelection": true,
-                      "text": "CUST Promote Book"
-                    },
-                    "CustomSetDiscount": {
-                      "press": "com.marianzeis.books.ext.controller.ActionInvoke.customSetDiscount",
-                      "visible": true,
-                      "enabled": true,
-                      "requiresSelection": true,
-                      "text": "CUST Set Discount"
-                    },
                     "CustomRefreshCatalog": {
                       "press": "com.marianzeis.books.ext.controller.Action.customRefreshCatalog",
                       "visible": true,
@@ -163,13 +149,6 @@
                       "enabled": true,
                       "requiresSelection": false,
                       "text": "CUST Func Get Sum Book Prices"
-                    },
-                    "CustomCreateBooksAndChapters": {
-                      "press": "com.marianzeis.books.ext.controller.ActionInvoke.customCreateBooksAndChapters",
-                      "visible": true,
-                      "enabled": true,
-                      "requiresSelection": false,
-                      "text": "CUST Create Books and Chapters"
                     }
                   }
                 }
