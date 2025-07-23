@@ -29,6 +29,12 @@
                                 <Button id="executePromoteBtn" text="Execute: Promote Book" press="executePromoteBook" type="Emphasized" class="sapUiTinyMarginEnd"/>
                                 <Button id="executeDiscountBtn" text="Execute: Set Discount (15%)" press="executeSetDiscount" type="Emphasized"/>
                             </HBox>
+
+                            <!-- Collection-bound Actions with execute -->
+                            <Title id="executeCollectionTitle" text="Collection-bound Actions" level="H3" class="sapUiSmallMarginTop"/>
+                            <HBox id="executeCollectionHBox" class="sapUiTinyMargin">
+                                <Button id="executeMassHalfPriceBtn" text="Execute: Mass Half Price" press="executeMassHalfPrice" type="Accept"/>
+                            </HBox>
                             
                             <!-- Unbound Actions with execute -->
                             <Title id="executeUnboundTitle" text="Unbound Actions" level="H3" class="sapUiSmallMarginTop"/>
@@ -59,6 +65,16 @@
                                 <Button id="invokeDiscountBtn" text="Invoke: Set Discount (25%)" press="invokeSetDiscount" type="Emphasized"/>
                             </HBox>
                             
+                            <Button id="invokeHalfPriceBindingBtn" text="Half price"
+                                    press=".invokeMassHalfPrice"
+                                    binding="{path:'BookshopService.massHalfPrice(...)'}"/>
+                            
+                            <!-- Collection-bound Actions with invoke -->
+                            <Title id="invokeCollectionTitle" text="Collection-bound Actions" level="H3" class="sapUiSmallMarginTop"/>
+                            <HBox id="invokeCollectionHBox" class="sapUiTinyMargin">
+                                <Button id="invokeMassHalfPriceBtn" text="Invoke: Mass Half Price" press="invokeMassHalfPrice" type="Accept"/>
+                            </HBox>
+                            
                             <!-- Unbound Actions with invoke -->
                             <Title id="invokeUnboundTitle" text="Unbound Actions" level="H3" class="sapUiSmallMarginTop"/>
                             <HBox id="invokeUnboundHBox" class="sapUiTinyMargin">
@@ -85,6 +101,52 @@
                             </HBox>
                             
                         </VBox>
+                    </content>
+                </Panel>
+
+                <!-- Books Table Panel -->
+                <Panel id="booksPanel" headerText="Books" expandable="true" expanded="true" class="sapUiMediumMarginTop">
+                    <content>
+                        <Table
+                            id="booksTable"
+                            items="{
+                                path: '/Books'
+                            }"
+                            inset="false"
+                            class="sapUiSmallMargin">
+                            <columns>
+                                <Column id="idColumn">
+                                    <Text id="idHeaderText" text="ID"/>
+                                </Column>
+                                <Column id="titleColumn">
+                                    <Text id="titleHeaderText" text="Title"/>
+                                </Column>
+                                <Column id="authorColumn">
+                                    <Text id="authorHeaderText" text="Author"/>
+                                </Column>
+                                <Column id="priceColumn">
+                                    <Text id="priceHeaderText" text="Price"/>
+                                </Column>
+                                <Column id="currencyColumn">
+                                    <Text id="currencyHeaderText" text="Currency"/>
+                                </Column>
+                                <Column id="stockColumn">
+                                    <Text id="stockHeaderText" text="Stock"/>
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{ID}"/>
+                                        <Text text="{title}"/>
+                                        <Text text="{author}"/>
+                                        <Text text="{price}"/>
+                                        <Text text="{currency}"/>
+                                        <Text text="{stock}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
                     </content>
                 </Panel>
                 

@@ -41,8 +41,8 @@ Open in your browser:
 | **CAP Service**       | `srv/`              | `.cds` definitions + JavaScript handlers                     |
 | **Fiori Elements V4** | `app/books/`        | CAP-annotated *CAP* buttons + custom extensions (*CUST*)     |
 | **Fiori Elements V2** | `app/books-v2/`     | Same patterns, but UI5 V2                                    |
-| **Freestyle V4**      | `app/freestyle/`    | `bindContext().invoke()` (✅) & `execute()` (legacy)          |
-| **Freestyle V2**      | `app/freestyle-v2/` | `ODataModel.callFunction()` & `extensionAPI.invokeActions()` |
+| **Freestyle V4**      | `app/freestyle/`    | `bindContext().invoke()` (✅) & `execute()` (legacy) + all action types |
+| **Freestyle V2**      | `app/freestyle-v2/` | `ODataModel.callFunction()` - **limited action support** ⚠️ |
 
 A full walk-through is available as a blog post → **“Complete Guide to Calling Actions in UI5 with Custom Code”** (link coming soon).
 
@@ -53,9 +53,21 @@ A full walk-through is available as a blog post → **“Complete Guide to Calli
 | Type         | Scope   | Params? | Example              | Purpose                  |
 | ------------ | ------- | ------- | -------------------- | ------------------------ |
 | **Action**   | Bound   | ✔ / ✖   | `promoteBook()`      | Write side-effects       |
+|              | Bound*  | ✔       | `massHalfPrice()`    | Collection-level actions |
 |              | Unbound | ✔ / ✖   | `refreshCatalog()`   | Service-wide mutations   |
 | **Function** | Bound   | ✖       | `getCurrentPrice()`  | Read-only, entity level  |
 |              | Unbound | ✖       | `getSumBookPrices()` | Read-only, service level |
+
+***Bound\*** = Collection-bound actions (bound to collection, not specific entity instance)
+
+### ⚠️ V2 Limitations
+
+| Feature | V4 Support | V2 Support | Notes |
+|---------|------------|------------|-------|
+| Collection-bound actions | ✅ | ❌ | V2 OData adapter doesn't support collection-bound actions properly [capire](https://cap.cloud.sap/docs/cds/cdl#bound-actions)/[capire](https://cap.cloud.sap/docs/guides/providing-services#actions-functions)/[UI5 Doc "Static Action"](https://ui5.sap.com/#/topic/cbf16c599f2d4b8796e3702f7d4aae6c) |
+| Complex nested parameters | ✅ | ❌ | `createBooksAndChapters` not available in V2 |
+| Simple bound/unbound actions | ✅ | ✅ | Works in both V4 and V2 |
+| Functions | ✅ | ✅ | Works in both V4 and V2 |
 
 See [`srv/bookshop-service.cds`](srv/bookshop-service.cds) for the full catalog.
 
@@ -69,9 +81,10 @@ See [`srv/bookshop-service.cds`](srv/bookshop-service.cds) for the full catalog.
 | `setDiscount`                   | bound   | ✔        | ✅              | `customSetDiscount` (V4/V2)                               |
 | `halfPrice`                     | bound   | –        | ✅              | Object-Page action                                        |
 | `addChapter`                    | bound   | ✔        | ✅              | Object-Page action                                        |
+| `massHalfPrice`                 | bound*  | ✔        | ✅              | `executeMassHalfPrice` / `invokeMassHalfPrice` (**V4-only**) |
 | `refreshCatalog`                | unbound | –        | ✅              | `customRefreshCatalog` (V4/V2)                            |
 | `generateReport`                | unbound | ✔        | ✅              | `customGenerateReport` (V4/V2)                            |
-| `createBooksAndChapters`        | unbound | ✔ (deep) | ✅              | `customCreateBooksAndChapters` (V4)                       |
+| `createBooksAndChapters`        | unbound | ✔ (deep) | ✅              | `customCreateBooksAndChapters` (**V4-only**)              |
 | `getCurrentPrice` *(function)*  | bound   | –        | ✅              | `customGetCurrentPrice` (V4) / function call (V2)         |
 | `getSumBookPrices` *(function)* | unbound | –        | ✅              | `customGetSumBookPrices` (V4) / function call (V2)        |
 
@@ -111,6 +124,8 @@ npm i -D @cap-js-community/odata-v2-adapter
 * Look for **CAP \*** buttons (auto-generated) vs. **CUST \*** buttons (custom).
 * Use your browser’s **Network tab** to compare the OData payloads.
 * Switch between **V2** and **V4** apps to see the path differences (`BookshopService.promoteBook(...)` vs `/Books_promoteBook`).
+* Test **collection-bound actions** like `massHalfPrice` (V4 only) and complex actions like `createBooksAndChapters` (V4 only).
+* Note: **V2 has limitations** - collection-bound actions and complex nested parameters don't work.
 
 ---
 

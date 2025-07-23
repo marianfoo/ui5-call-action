@@ -23,14 +23,14 @@ service BookshopService @(path: '/bookshop') {
       content: String;
     };
 
-    // 4. NEW: Half Price action WITHOUT parameters
+    // 4. Half Price action WITHOUT parameters
     action halfPrice() returns {
       ID: UUID;
       title: String;
       price: Decimal;
     };
 
-    // 5. NEW: Show Cover Picture action WITHOUT parameters
+    // 5. Show Cover Picture action WITHOUT parameters
     action showCoverPicture() returns {
       value: String;
     };
@@ -38,7 +38,13 @@ service BookshopService @(path: '/bookshop') {
     function getCurrentPrice() returns {
       price: Decimal;
     };
+
+    //bound to the collection and not a specific instance of Books
+    action massHalfPrice (books: many $self) returns array of Books;
+    action similarBooks (book: $self) returns array of Books;
   };
+
+  action massHalfPrice (books: many Books) returns array of Books;
 
   // 3. Unbound action WITHOUT parameters
   action refreshCatalog() returns {

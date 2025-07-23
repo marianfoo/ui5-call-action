@@ -372,4 +372,68 @@ export default class MainView extends Controller {
 
         dialog.open();
     }
+
+    /* ------------------------------------------------------------------ */
+    /* 8  Collection-bound action – Mass Half Price (execute)            */
+    /* ------------------------------------------------------------------ */
+    public async executeMassHalfPrice(): Promise<void> {
+
+        const odataModel = this.getView()?.getModel() as ODataModel;
+        const actionPath = "/Books/BookshopService.massHalfPrice(...)";
+        
+        const table = this.byId("booksTable") as Table;
+        const binding = table.getBinding("items");
+        
+        const booksData = binding.getContexts().map(context => {
+            const bookObject = context.getObject();
+            return {
+                ID: bookObject.ID,
+                IsActiveEntity: bookObject.IsActiveEntity
+            };
+        });
+
+        if (booksData.length === 0) {
+            MessageToast.show("No books available for mass half price");
+            return;
+        }
+
+        const actionBinding = odataModel.bindContext(actionPath);
+        actionBinding.setParameter("books", booksData);
+
+        await actionBinding.execute();
+        MessageToast.show(`Applied half price to ${booksData.length} books (Execute)`);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* 9  Collection-bound action – Mass Half Price (invoke)             */
+    /* ------------------------------------------------------------------ */
+    public async invokeMassHalfPrice(): Promise<void> {
+
+        const odataModel = this.getView()?.getModel() as ODataModel;
+        const actionPath = "/Books/BookshopService.massHalfPrice(...)";
+        
+        // Get existing books from the model instead of creating dummy data
+        // Here we use the binding parameter approach - binding to existing collection data
+        const table = this.byId("booksTable") as Table;
+        const binding = table.getBinding("items");
+        
+        const booksData = binding.getContexts().map(context => {
+            const bookObject = context.getObject();
+            return {
+                ID: bookObject.ID,
+                IsActiveEntity: bookObject.IsActiveEntity
+            };
+        });
+
+        if (booksData.length === 0) {
+            MessageToast.show("No books available for mass half price");
+            return;
+        }
+
+        const actionBinding = odataModel.bindContext(actionPath);
+        actionBinding.setParameter("books", booksData);
+
+        await actionBinding.invoke();
+        MessageToast.show(`Applied half price to ${booksData.length} books (Invoke)`);
+    }
 }

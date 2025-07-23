@@ -281,4 +281,60 @@ module.exports = cds.service.impl(async function() {
       };
     }
   });
+
+  // NEW: Mass Half Price action - bound to collection
+  this.on('massHalfPrice', async (req) => {
+    const { books } = req.data;
+    
+    if (!books || !Array.isArray(books) || books.length === 0) {
+      req.error('Books data is required and must be a non-empty array');
+      return [];
+    }
+    
+    try {
+      const updatedBooks = [];
+      
+      // Apply half price to each book in the collection
+      for (const bookData of books) {
+        if (!bookData.ID) {
+          req.warn('Book ID is required for updating price');
+          continue;
+        }
+        
+        // Get the current book
+        const currentBooks = await cds.read(Books).where({ ID: bookData.ID });
+        const currentBook = currentBooks[0];
+        
+        if (!currentBook) {
+          req.warn(`Book with ID ${bookData.ID} not found`);
+          continue;
+        }
+        
+        // Calculate half price
+        const newPrice = currentBook.price * 0.5;
+        
+        // Update the book price
+        await cds.update(Books)
+          .set({ price: newPrice })
+          .where({ ID: bookData.ID });
+        
+        // Add to result
+        updatedBooks.push({
+          ID: currentBook.ID,
+          title: currentBook.title,
+          author: currentBook.author,
+          price: newPrice,
+          currency_code: currentBook.currency_code,
+          stock: currentBook.stock
+        });
+      }
+      
+      req.info(`Applied half price to ${updatedBooks.length} books`);
+      return updatedBooks;
+      
+    } catch (error) {
+      req.error(`Failed to apply mass half price: ${error.message}`);
+      return [];
+    }
+  });
 }); 
